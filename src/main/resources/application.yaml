@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: quartz-demo
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/quartzdb
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+  quartz:
+    job-store-type: jdbc
+    overwrite-existing-jobs: true
+    auto-startup: true
+    wait-for-jobs-to-complete-on-shutdown: true
+    jdbc:
+      #      initialize-schema: always
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: quartz-cluster
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            isClustered: true
+            clusterCheckinInterval: 10000
+            misfireThreshold: 60000
+            tablePrefix: QRTZ_
+            dataSource: quartzDs
+          threadPool:
+            threadCount: 2
+          dataSource:
+            quartzDs:
+              provider: hikaricp
+              driver: org.postgresql.Driver
+              URL: jdbc:postgresql://127.0.0.1:5432/quartzdb
+              user: postgres
+              password: postgres123
+              maxConnections: 5
